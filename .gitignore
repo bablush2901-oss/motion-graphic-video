@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+data/uploads/*
+data/exports/*
+data/uploads.json
+data/uploads.json.tmp
+.remotion/
+*.log
+.DS_Store
+Thumbs.db
+coverage/

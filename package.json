@@ -1,0 +1,41 @@
+{
+  "name": "motion-studio-local",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n API,APP -c cyan,magenta \"node --watch server/index.mjs\" \"vite --host 127.0.0.1\"",
+    "start": "node server/index.mjs",
+    "build": "tsc --noEmit && vite build",
+    "check": "tsc --noEmit",
+    "test": "node --test server/*.test.mjs",
+    "setup": "node scripts/setup.mjs",
+    "build:web": "tsc --noEmit && vite build --mode hosted"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.534",
+    "@remotion/media": "4.0.534",
+    "@remotion/player": "4.0.534",
+    "@remotion/renderer": "4.0.534",
+    "dotenv": "16.6.1",
+    "express": "5.1.0",
+    "lucide-react": "0.468.0",
+    "multer": "2.0.2",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "remotion": "4.0.534",
+    "zod": "3.25.76",
+    "@remotion/web-renderer": "4.0.534"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.9",
+    "@vitejs/plugin-react": "4.7.0",
+    "concurrently": "9.2.0",
+    "typescript": "5.9.2",
+    "vite": "6.3.5"
+  }
+}
