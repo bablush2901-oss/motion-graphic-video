@@ -1,0 +1,42 @@
+name: Publish MOV converter
+on:
+  push:
+    branches: [main]
+    paths: ['mov-to-mp4/**', '.github/workflows/converter-pages.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: converter-pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare browser conversion engine
+        run: |
+          mkdir -p _site/mov-to-mp4/vendor
+          cp mov-to-mp4/index.html mov-to-mp4/app.js _site/mov-to-mp4/
+          npm pack @ffmpeg/ffmpeg@0.12.15
+          npm pack @ffmpeg/core@0.12.10
+          tar -xzf ffmpeg-ffmpeg-0.12.15.tgz -C _site/mov-to-mp4/vendor --strip-components=3 package/dist/umd/ffmpeg.js package/dist/umd/814.ffmpeg.js
+          tar -xzf ffmpeg-core-0.12.10.tgz -C _site/mov-to-mp4/vendor --strip-components=3 package/dist/umd/ffmpeg-core.js package/dist/umd/ffmpeg-core.wasm
+          printf '<!doctype html><meta http-equiv="refresh" content="0;url=mov-to-mp4/"><a href="mov-to-mp4/">Open MOV to MP4 converter</a>' > _site/index.html
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
